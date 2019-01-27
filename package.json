@@ -10,7 +10,6 @@
   },
   "scripts": {
     "test": "npm run lint && jest",
-    "_install": "node husky install",
     "preuninstall": "node husky uninstall",
     "devinstall": "npm run build && npm run _install -- node_modules/husky && node scripts/dev-fix-path",
     "devuninstall": "npm run build && npm run preuninstall -- node_modules/husky",
