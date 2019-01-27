@@ -94,7 +94,9 @@ function removeHooks(filenames: string[]) {
 function isInNodeModules(dir: string) {
   // INIT_CWD holds the full path you were in when you ran npm install (supported also by yarn and pnpm)
   // See https://docs.npmjs.com/cli/run-script
-  if (process.env.INIT_CWD) {
+  if (process.env.HUSKY_CURRENT_DIR === 'true') {
+    return false
+  } else if (process.env.INIT_CWD) {
     return process.env.INIT_CWD.indexOf('node_modules') !== -1
   }
 
@@ -120,9 +122,10 @@ export function install(
   console.log('husky > setting up git hooks')
 
   // First directory containing user's package.json
-  const userPkgDir = process.env.HUSKY_CURRENT_DIR
-    ? process.cwd()
-    : pkgDir.sync(path.join(huskyDir, '..'))
+  const userPkgDir =
+    process.env.HUSKY_CURRENT_DIR === 'true'
+      ? process.cwd()
+      : pkgDir.sync(path.join(huskyDir, '..'))
 
   // Get conf from package.json or .huskyrc
   const conf = getConf(userPkgDir)
@@ -194,9 +197,10 @@ export function install(
 
 export function uninstall(huskyDir: string) {
   console.log('husky > uninstalling git hooks')
-  const userPkgDir = process.env.HUSKY_CURRENT_DIR
-    ? process.cwd()
-    : pkgDir.sync(path.join(huskyDir, '..'))
+  const userPkgDir =
+    process.env.HUSKY_CURRENT_DIR === 'true'
+      ? process.cwd()
+      : pkgDir.sync(path.join(huskyDir, '..'))
   const resolvedGitDir = resolveGitDir(userPkgDir)
 
   if (resolvedGitDir === null) {

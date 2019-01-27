@@ -16,9 +16,10 @@ export default async function run(
   [, scriptPath, hookName = '', HUSKY_GIT_PARAMS]: string[],
   getStdinFn: () => Promise<string> = getStdin // Used for mocking
 ): Promise<number> {
-  const cwd = process.env.HUSKY_CURRENT_DIR
-    ? process.cwd()
-    : path.resolve(scriptPath.split('node_modules')[0])
+  const cwd =
+    process.env.HUSKY_CURRENT_DIR === 'true'
+      ? process.cwd()
+      : path.resolve(scriptPath.split('node_modules')[0])
   // In some cases, package.json may not exist
   // For example, when switching to gh-page branch
   let pkg
