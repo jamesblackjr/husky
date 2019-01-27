@@ -120,8 +120,9 @@ export function install(
   console.log('husky > setting up git hooks')
 
   // First directory containing user's package.json
-  const userPkgDir =
-    process.env.HUSKY_PKG_DIR || pkgDir.sync(path.join(huskyDir, '..'))
+  const userPkgDir = process.env.HUSKY_CURRENT_DIR
+    ? process.cwd()
+    : pkgDir.sync(path.join(huskyDir, '..'))
 
   // Get conf from package.json or .huskyrc
   const conf = getConf(userPkgDir)

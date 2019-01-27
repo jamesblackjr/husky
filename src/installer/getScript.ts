@@ -5,6 +5,7 @@ import * as slash from 'slash'
 
 interface IContext {
   createdAt: string
+  currentDir?: boolean
   homepage: string
   node: string
   pkgDirectory?: string
@@ -23,6 +24,7 @@ const huskyrc = '~/.huskyrc'
 // Render script
 const render = ({
   createdAt,
+  currentDir,
   homepage,
   node,
   pkgDirectory,
@@ -68,7 +70,8 @@ if [ -f "$scriptPath" ]; then
     debug "source ${huskyrc}"
     source ${huskyrc}
   fi
-  ${node} "$scriptPath" $hookName "$gitParams"
+
+  HUSKY_CURRENT_DIR=${currentDir} ${node} "$scriptPath" $hookName "$gitParams"
 else
   echo "Can't find Husky, skipping $hookName hook"
   echo "You can reinstall it using 'npm install husky --save-dev' or delete this hook"
@@ -96,6 +99,13 @@ export default function(
   // Env variable
   const pkgHomepage = process && process.env && process.env.npm_package_homepage
   const pkgDirectory = process && process.env && process.env.PWD
+  const currentDir =
+    process &&
+    process.env &&
+    process.env.HUSKY_CURRENT_DIR &&
+    process.env.HUSKY_CURRENT_DIR.toLowerCase() === 'true'
+      ? true
+      : false
 
   // Husky package.json
   const { homepage, version } = JSON.parse(
@@ -113,6 +123,7 @@ export default function(
   // Render script
   return render({
     createdAt,
+    currentDir,
     homepage,
     node,
     pkgDirectory,
