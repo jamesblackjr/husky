@@ -194,7 +194,9 @@ export function install(
 
 export function uninstall(huskyDir: string) {
   console.log('husky > uninstalling git hooks')
-  const userPkgDir = pkgDir.sync(path.join(huskyDir, '..'))
+  const userPkgDir = process.env.HUSKY_CURRENT_DIR
+    ? process.cwd()
+    : pkgDir.sync(path.join(huskyDir, '..'))
   const resolvedGitDir = resolveGitDir(userPkgDir)
 
   if (resolvedGitDir === null) {
