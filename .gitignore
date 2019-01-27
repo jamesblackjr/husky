@@ -1,5 +1,4 @@
 *.log
 .DS_Store
 ci-post-checkout
-lib
 node_modules/
